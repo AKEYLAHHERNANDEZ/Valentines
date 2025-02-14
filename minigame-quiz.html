@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture the Heart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('./images.png/Wallpaper\ rosa\ para\ notebook_\ laptop.jpg');
+    padding-top: 80px; /* Offset for fixed header */
+}
+        
+#game-container {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #b948cf, #d857c3);
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    margin-top: 70px; /* Space below the fixed header */
+}
+
+        #game-area {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #ffecd2, #af67da);
+            border: 3px solid #030303;
+            margin: 20px auto;
+        }
+
+        #player {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background-color: rgb(9, 224, 27);
+            border-radius: 50%;
+        }
+
+        /* Style for all flags */
+        .flag {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgb(247, 0, 41);
+            border-radius: 50%;
+        }
+
+        .obstacle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: rgb(0, 0, 0);
+            border-radius: 50%;
+        }
+
+        #timer, #score, #high-score {
+            font-size: 18px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        #game-message {
+            margin: 10px 0;
+            font-size: 25px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        button {
+            margin: 10px;
+            padding: 20px;
+            background-color: #ac459b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 20px;
+
+        }
+
+        button.hidden {
+            display: none;
+        }
+
+        #back-home {
+    display: block; /* Ensures it appears as a block under h1 */
+    margin: 10px auto; /* Centers the button */
+    background-color: #ee2da4c4;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+
+        #mobile-controls {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            #mobile-controls {
+                display: grid;
+                grid-template-areas:
+                    ". up ."
+                    "left down right";
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            #up-btn { grid-area: up; }
+            #down-btn { grid-area: down; }
+            #left-btn { grid-area: left; }
+            #right-btn { grid-area: right; }
+        }
+
+        @keyframes heartAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); }
+        }
+
+        .heart-hailing {
+            animation: heartAnimation 1s infinite;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .explode {
+            animation: explode 0.5s ease-out;
+        }
+
+        .bear {
+  position: absolute;
+  bottom: 0px;
+  left: 80px;
+  width: auto;
+  z-index: 3;
+}
+
+.bear img {
+  width: 100%;
+}
+
+.dice {
+  position: absolute;
+  bottom: 20px;
+  right: 80px;
+  width: auto;
+  z-index: 3;
+}
+
+.dice img {
+  width: 100%;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: #f76f98ea;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>❤️ Capture My Heart ❤️</h1>
+    <button id="back-home">Back to Home</button>
+
+    </header>
+    <audio id="heartbeat-sound" src="./audios/heartbeat-21649.mp3"></audio>
+
+    <div id="game-container">
+                <div id="game-area">
+            <div id="player"></div>
+            <div class="flag" id="flag1"></div>
+            <div class="flag" id="flag2"></div>
+            <div class="flag" id="flag3"></div>
+           <div id="obstacle" class="obstacle"></div>
+        </div>
+        <div id="timer">Time Left: <span id="time-left">30</span> seconds</div>
+        <div id="score">Flags Captured: <span id="score-value">0</span>/3</div>
+        <div id="high-score">High Score: <span id="high-score-value">0</span></div>
+        <div id="game-message"></div>
+        <button id="start-btn">Start Game</button>
+        <button id="start-over" class="hidden">Start Over</button>
+        <div id="mobile-controls">
+            <button id="up-btn">↑</button>
+            <button id="down-btn">↓</button>
+            <button id="left-btn">←</button>
+            <button id="right-btn">→</button>
+        </div>
+    </div>
+
+    <div class="bear">
+        <img src="./images.png/download__4_-removebg-preview.png" alt="Bear">
+      </div>
+
+      <div class="dice">
+        <img src="./images.png/download__3_-removebg-preview.png" alt="Dice">
+      </div>
+    <script>
+        // Get elements
+        const player = document.getElementById('player');
+        const flags = [document.getElementById('flag1'), document.getElementById('flag2'), document.getElementById('flag3')];
+        const obstacle = document.getElementById('obstacle');
+        const timerDisplay = document.getElementById('time-left');
+        const gameMessage = document.getElementById('game-message');
+        const startBtn = document.getElementById('start-btn');
+        const startOverBtn = document.getElementById('start-over');
+        const backHomeBtn = document.getElementById('back-home');
+        const heartbeatSound = document.getElementById('heartbeat-sound');
+        const scoreDisplay = document.getElementById('score-value');
+        const highScoreDisplay = document.getElementById('high-score-value');
+
+        let playerPosition = { x: 0, y: 0 };
+        let obstaclePosition = { x: 0, y: 0 };
+        let obstacleDirection = { x: 1, y: 1 }; // 1 for right/down, -1 for left/up
+        let timeLeft = 30;
+        let score = 0;
+        let highScore = localStorage.getItem('highScore') || 0;
+        let level = 1;
+        let gameInterval;
+        let timerInterval;
+        let obstacleInterval;
+
+        // Initialize high score display
+        highScoreDisplay.textContent = highScore;
+
+        // Start the game
+        function startGame() {
+            heartbeatSound.currentTime = 0; // Reset to start
+            heartbeatSound.play();
+            
+            gameMessage.textContent = "";
+            startBtn.classList.add('hidden');
+            startOverBtn.classList.add('hidden');
+            backHomeBtn.classList.add('hidden');
+            timeLeft = 30;
+            timerDisplay.textContent = timeLeft;
+            score = 0;
+            scoreDisplay.textContent = `${score}/3`;
+            playerPosition = { x: 0, y: 0 };
+            player.style.left = `${playerPosition.x}px`;
+            player.style.bottom = `${playerPosition.y}px`;
+
+            // Move the flags and obstacle randomly
+            flags.forEach(flag => {
+                flag.style.top = `${Math.random() * 250}px`;
+                flag.style.left = `${Math.random() * 250}px`;
+            });
+            obstaclePosition = { x: Math.random() * 270, y: Math.random() * 270 };
+            obstacle.style.left = `${obstaclePosition.x}px`;
+            obstacle.style.top = `${obstaclePosition.y}px`;
+
+            // Start the timer
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    gameOver("Time's up! Try again.");
+                }
+            }, 1000);
+
+            // Start the movement loop
+            gameInterval = setInterval(() => {
+                flags.forEach((flag, index) => {
+                    if (checkCollision(flag)) {
+                        captureFlag(flag, index);
+                    }
+                });
+            }, 100);
+
+            // Start the obstacle movement
+            clearInterval(obstacleInterval);
+            obstacleInterval = setInterval(moveObstacle, 100 - level * 70); // Speed increases with level
+        }
+
+        // Move the obstacle
+        function moveObstacle() {
+            const step = 5 + level; // Speed increases with level
+            const gameAreaWidth = 300;
+            const gameAreaHeight = 300;
+            const obstacleSize = 30;
+
+            // Update obstacle position
+            obstaclePosition.x += step * obstacleDirection.x;
+            obstaclePosition.y += step * obstacleDirection.y;
+
+            // Reverse direction if hitting the edges
+            if (obstaclePosition.x <= 0 || obstaclePosition.x >= gameAreaWidth - obstacleSize) {
+                obstacleDirection.x *= -1;
+            }
+            if (obstaclePosition.y <= 0 || obstaclePosition.y >= gameAreaHeight - obstacleSize) {
+                obstacleDirection.y *= -1;
+            }
+
+            // Apply the new position
+            obstacle.style.left = `${obstaclePosition.x}px`;
+            obstacle.style.top = `${obstaclePosition.y}px`;
+        }
+
+        // Check if player captures a flag or hits an obstacle
+        function checkCollision(flag) {
+            const playerRect = player.getBoundingClientRect();
+            const flagRect = flag.getBoundingClientRect();
+            const obstacleRect = obstacle.getBoundingClientRect();
+
+            // Check collision with obstacle
+            if (
+                playerRect.left < obstacleRect.right &&
+                playerRect.right > obstacleRect.left &&
+                playerRect.top < obstacleRect.bottom &&
+                playerRect.bottom > obstacleRect.top
+            ) {
+                gameOver("You hit an obstacle! Game over.");
+                return false;
+            }
+
+            // Check collision with flag
+            return (
+                playerRect.left < flagRect.right &&
+                playerRect.right > flagRect.left &&
+                playerRect.top < flagRect.bottom &&
+                playerRect.bottom > flagRect.top
+            );
+        }
+
+        // Capture a flag
+        function captureFlag(flag, index) {
+            score++;
+            scoreDisplay.textContent = `${score}/3`;
+            flag.style.top = `${Math.random() * 250}px`;
+            flag.style.left = `${Math.random() * 250}px`;
+
+            if (score === 3) {
+                gameOver("You captured all the hearts! You win! ❤️");
+            }
+        }
+
+        // End the game
+        function gameOver(message) {
+            clearInterval(gameInterval); // Stop the game loop
+            clearInterval(obstacleInterval); // Stop the obstacle movement
+            clearInterval(timerInterval); // Stop the timer
+            gameMessage.textContent = message;
+
+            if (message.includes("captured")) {
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('highScore', highScore);
+                    highScoreDisplay.textContent = highScore;
+                }
+                flags.forEach(flag => flag.classList.add('explode'));
+                level++; // Increase level
+            } else if (message.includes("obstacle")) {
+                player.classList.add('explode');
+            }
+
+            startOverBtn.classList.remove('hidden');
+            backHomeBtn.classList.remove('hidden');
+            heartbeatSound.pause();
+    heartbeatSound.currentTime = 0; 
+        }
+
+        // Handle keyboard movement
+        document.addEventListener('keydown', (e) => {
+            const step = 10;
+            const gameAreaWidth = 300;
+            const gameAreaHeight = 300;
+            const playerSize = 20;
+
+            if (e.key === 'ArrowUp' && playerPosition.y + step <= gameAreaHeight - playerSize) {
+                playerPosition.y += step;
+            }
+            if (e.key === 'ArrowDown' && playerPosition.y - step >= 0) {
+                playerPosition.y -= step;
+            }
+            if (e.key === 'ArrowLeft' && playerPosition.x - step >= 0) {
+                playerPosition.x -= step;
+            }
+            if (e.key === 'ArrowRight' && playerPosition.x + step <= gameAreaWidth - playerSize) {
+                playerPosition.x += step;
+            }
+
+            player.style.left = `${playerPosition.x}px`;
+            player.style.bottom = `${playerPosition.y}px`;
+        });
+
+        // Mobile controls
+        const movePlayer = (direction) => {
+            const step = 10;
+            const gameAreaWidth = 300;
+            const gameAreaHeight = 300;
+            const playerSize = 20;
+
+            if (direction === 'up' && playerPosition.y + step <= gameAreaHeight - playerSize) {
+                playerPosition.y += step;
+            }
+            if (direction === 'down' && playerPosition.y - step >= 0) {
+                playerPosition.y -= step;
+            }
+            if (direction === 'left' && playerPosition.x - step >= 0) {
+                playerPosition.x -= step;
+            }
+            if (direction === 'right' && playerPosition.x + step <= gameAreaWidth - playerSize) {
+                playerPosition.x += step;
+            }
+
+            player.style.left = `${playerPosition.x}px`;
+            player.style.bottom = `${playerPosition.y}px`;
+        };
+
+        document.getElementById('up-btn').addEventListener('click', () => movePlayer('up'));
+        document.getElementById('down-btn').addEventListener('click', () => movePlayer('down'));
+        document.getElementById('left-btn').addEventListener('click', () => movePlayer('left'));
+        document.getElementById('right-btn').addEventListener('click', () => movePlayer('right'));
+
+        // Restart the game
+        startOverBtn.addEventListener('click', startGame);
+
+        // Go back to the main page (optional)
+        backHomeBtn.addEventListener('click', () => {
+            window.location.href = '/'; // Adjust this to your homepage path
+        });
+
+        // Start the game when the start button is clicked
+        startBtn.addEventListener('click', startGame);
+    </script>
+</body>
+</html>

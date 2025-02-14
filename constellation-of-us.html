@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constellation of Us</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Georgia', serif;
+      overflow: hidden;
+      background: radial-gradient(circle, #000428, #000203);
+      color: white;
+    }
+
+    .starry-sky {
+      position: relative;
+      height: 100vh;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      animation: twinkleSky 10s infinite alternate;
+    }
+
+    @keyframes twinkleSky {
+      0% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+
+    .star {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle, #fff, #ffeb3b);
+      clip-path: polygon(
+        50% 0%, 61% 35%, 98% 35%, 
+        68% 57%, 79% 91%, 50% 70%, 
+        21% 91%, 32% 57%, 2% 35%, 
+        39% 35%
+      );
+
+      box-shadow: 0 0 10px #ffeb3b, 0 0 20px #ffeb3b;
+      opacity: 0.8;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .star:hover {
+      transform: scale(1.5);
+      box-shadow: 0 0 20px #ffeb3b, 0 0 40px #ffeb3b;
+    }
+
+    .star.active {
+      animation: twinkle 1.5s infinite alternate;
+      background: radial-gradient(circle, #ffeb3b, #ffc107);
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .alert-box {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 223, 186, 0.9);
+      color: darkred;
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 223, 186, 0.8);
+      text-align: center;
+      display: none;
+      z-index: 1000;
+      width: 300px;
+    }
+
+    .success-message {
+  position: fixed;
+  bottom: 20px; /* Align to the bottom */
+  left: 37%; /* Align to the left */
+  background: rgba(21, 51, 223, 0.9);
+  color: rgb(255, 255, 255);
+  padding: 10px;
+  font-size: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  display: none;
+  text-align: center; /* Align text to the left */
+}
+    .instruction {
+      position: fixed;
+      top: 20px;
+      left: 28%;
+      transform: translateX(-50%);
+      background-color: rgba(24, 20, 230, 0.555);
+      color: #ffffff;
+      padding: 15px 20px;
+      font-size: 25px;
+      border-radius: 10px;
+      display: block;
+      animation: bounce  2s infinite;
+      text-align: center;
+      max-width: 80%;
+    }
+
+    @keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+    .message h2 {
+      margin: 0;
+      font-size: 36px;
+      font-weight: bold;
+      text-shadow: 0 0 10px #ffeb3b;
+    }
+
+    .message p {
+      margin: 10px 0 0;
+      font-size: 20px;
+      font-style: italic;
+    }
+
+    .constellation-line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(to right, #ffeb3b, #ffc107);
+      box-shadow: 0 0 10px #ffeb3b;
+      transform-origin: 0 0;
+      z-index: -1;
+    }
+
+    .star-message {
+      position: absolute;
+      font-size: 14px;
+      color: #3bb7ff;
+      text-shadow: 0 0 5px #ffeb3b;
+      display: none;
+    }
+
+    .clouds {
+  position: absolute;
+  bottom: 0px;
+  right: 10px;
+  width: auto;
+  z-index: 3;
+}
+ .clouds2 {
+  position: absolute;
+  bottom: 0px;
+  left: 10px;
+  width: auto;
+  z-index: 3;
+}
+
+.clouds img {
+  width: 100%;
+}
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgb(2, 2, 2);
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-home {
+    position: fixed;
+    top: 20px;  /* Move to top */
+    left: 20px; /* Move to left */
+    transform: none; /* Remove centering transform */
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: rgb(2, 1, 1);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+    .back-home:hover {
+      background-color: #3437ee;
+    }
+  </style>
+</head>
+<body>
+  <div class="starry-sky">
+<div class="starry-sky">
+    <!-- Adjusted Heart-shaped star positions -->
+    <div class="star" data-memory="The day we met, unexpectedly." style="top: 40%; left: 50%;"></div>
+<div class="star" data-memory="Our first hangout, just talking and laughing." style="top: 30%; left: 40%;"></div>
+<div class="star" data-memory="That time we couldn’t stop laughing together." style="top: 30%; left: 60%;"></div>
+<div class="star" data-memory="When we realized we made a great team." style="top: 50%; left: 37%;"></div>
+<div class="star" data-memory="Every moment since has been a bit of an adventure." style="top: 50%; left: 63%;"></div>
+<div class="star" data-memory="A friendship that keeps growing stronger." style="top: 70%; left: 50%;"></div>
+
+    
+</div>
+
+
+  <div class="success-message" id="success-message">
+    <h2>✨💙 Constellation Complete! 💙✨</h2>
+    <p> When all the stars align so does our love💖</p>
+  </div>
+
+  <div class="instruction">
+    <p>✨💛 Discover the story of us! 💛✨<br>Click on the stars to reveal cherished memories and complete your constellation.</p>
+  </div>
+  <button class="back-home" onclick="goHome()">Back to Home</button>
+
+  <div class="alert-box" id="alert-box"></div>
+  <!-- Audio for sound effects -->
+  <audio id="star-sound" src="./audios/mouse-click-sound-233951.mp3"></audio>
+  <div class="clouds">
+    <img src="./images.png/rightcloud.png" alt="clouds">
+  </div>
+
+  <div class="clouds2">
+    <img src="./images.png/leftcloud.png" alt="clouds">
+  </div>
+  <script>
+    const stars = document.querySelectorAll('.star');
+    const successMessage = document.getElementById('success-message');
+    const alertBox = document.getElementById('alert-box');
+    const starSound = document.getElementById('star-sound');
+    const completionSound = document.getElementById('completion-sound');
+    let clickedStars = [];
+
+    stars.forEach((star, index) => {
+      star.addEventListener('click', function() {
+        if (!this.classList.contains('active')) {
+          const memory = this.getAttribute('data-memory');
+          showAlert(memory);
+          this.classList.add('active');
+          starSound.play();
+          clickedStars.push(index);
+          drawLines();
+          if (clickedStars.length === stars.length) {
+            successMessage.style.display = 'block';
+            completionSound.play();
+          }
+        }
+      });
+    });
+
+    function drawLines() {
+      document.querySelectorAll('.constellation-line').forEach(line => line.remove());
+
+      for (let i = 1; i < clickedStars.length; i++) {
+        const start = stars[clickedStars[i - 1]];
+        const end = stars[clickedStars[i]];
+        drawLineBetween(start, end);
+      }
+
+      if (clickedStars.length > 1) {
+        const start = stars[clickedStars[clickedStars.length - 1]];
+        const end = stars[clickedStars[0]];
+        drawLineBetween(start, end);
+      }
+    }
+
+    function drawLineBetween(start, end) {
+      const line = document.createElement('div');
+      line.classList.add('constellation-line');
+
+      const startRect = start.getBoundingClientRect();
+      const endRect = end.getBoundingClientRect();
+
+      const startX = startRect.left + startRect.width / 2;
+      const startY = startRect.top + startRect.height / 2;
+      const endX = endRect.left + endRect.width / 2;
+      const endY = endRect.top + endRect.height / 2;
+
+      const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+      const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI);
+
+      line.style.width = `${length}px`;
+      line.style.transform = `rotate(${angle}deg)`;
+      line.style.left = `${startX}px`;
+      line.style.top = `${startY}px`;
+
+      document.querySelector('.starry-sky').appendChild(line);
+    }
+
+    function showAlert(message) {
+      alertBox.textContent = message;
+      alertBox.style.display = 'block';
+      setTimeout(() => {
+        alertBox.style.display = 'none';
+      }, 2000);
+    }
+
+    function goHome() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

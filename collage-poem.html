@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collage Poem</title>
+    <style>
+        
+        body {
+            font-family: "Times-New-Roman", Garamond;
+            overflow: hidden; /* Consider if this is truly needed. It can cause accessibility issues. */
+            color: #fff;
+            background-color: #f0f0f0; /* Example background color */
+        }
+
+        .bgoverlay {
+            background: rgb(0, 0, 0);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            position: relative;
+            margin: 120px auto 0 auto;
+            width: 80%; /* Make it wider */
+            max-width: 900px; /* Set a maximum width */
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: flex-start; /* Align items to the top */
+            flex-direction: column; /* Align items in a column */
+            padding: 20px; /* Add padding to the container */
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+            border-radius: 10px; /* Add rounded corners */
+        }
+
+        .message-box {
+            width: 100%; /* Occupy full width of the container */
+            text-align: center; /* Center the text */
+            font-size: 1.2em; /* Adjust font size for better readability */
+            line-height: 1.5; /* Improve line spacing */
+            white-space: pre-wrap; /* Preserve line breaks and wrap text */
+        }
+
+        .ico {
+            display: block;
+            width: 320px;
+            height: 320px;
+            position: relative;
+            margin: 0 auto; /* Center the icon */
+        }
+
+        .open .ico {
+            animation: open 4s;
+            transform: scale(10);
+        }
+
+        .ico .title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -95px;
+            margin-top: -73px;
+            z-index: 4;
+            font-size: 50px;
+            font-family: "Pacifico", cursive;
+            color: #fff;
+            cursor: pointer;
+            text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .open .ico .title {
+            opacity: 0;
+            transition: all 0.3s ease;
+            top: -100px;
+        }
+
+        .ico:before,
+        .ico:after,
+        .ico2:before,
+        .ico2:after {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .ico:before,
+        .ico:after,
+        .ico2:before,
+        .ico2:after {
+            display: block;
+            font-size: 20em;
+            color: #ff4081;
+            content: "\f004";
+            font-family: FontAwesome;
+        }
+
+        .ico2:before,
+        .ico2:after {
+            color: #e91e63;
+        }
+
+        .ico:before {
+            z-index: 3;
+        }
+
+        .ico:after {
+            animation: explode 4s infinite;
+        }
+
+        .ico2:before {
+            animation: explodeSmall 3s infinite;
+        }
+
+        .ico2:after {
+            animation: explodeSmall 2s infinite;
+        }
+
+        .endtext {
+            opacity: 0;
+            position: absolute;
+            top: -100px;
+            width: 100%;
+        }
+
+        .open .endtext {
+            top: 0;
+            opacity: 1;
+            animation: show 5s;
+        }
+
+        .endtext .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            cursor: pointer;
+            text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .endtext h1,
+        .endtext h2,
+        .endtext h3 {
+            text-shadow: 2px 4px 3px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            font-weight: normal;
+        }
+
+        .endtext h1 {
+            font-size: 50px;
+        }
+
+        .endtext h2 {
+            font-size: 30px;
+        }
+
+        .endtext h3 {
+            font-size: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgb(2, 2, 2);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-home {
+            position: fixed;
+            bottom: 20px;
+            left: 50%; /* Position horizontally in the middle */
+            transform: translateX(-50%); /* Adjust for centering */
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-home:hover {
+            background-color: #f87dc1;
+        }
+
+        @keyframes explode {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        @keyframes explodeSmall {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes open {
+            from {
+                transform: scale(1);
+            }
+            to {
+                transform: scale(10);
+            }
+        }
+
+        @keyframes show {
+            from {
+                opacity: 0;
+                top: -100px;
+            }
+            to {
+                opacity: 1;
+                top: 0;
+            }
+        }
+    </style>
+
+    <!-- Include FontAwesome and jQuery -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="bgoverlay">
+    <div class="container">
+        <span class="ico">
+            <span class="ico2"></span>
+            <span class="title">Click Me</span>
+        </span>
+        <div class="endtext">
+            <span class="close" title="Restart"><i class="fa fa-times"></i></span>
+            <h1>Love </h1>
+            <h2>
+                
+With you, I dance in gentle rain,
+No fear, no doubt, no trace of pain.
+Just water dripping, soft and slow,
+Laughter rising, warm and low.
+The world is ours, just you and I,
+Beneath the stars, beneath the sky.
+You touched my hand, you traced my skin,
+Brushed through my hair—set fire within.
+Heart-shaped clouds drift up so high,
+Just us alone, side by side.
+Stolen glances, whispered bliss,
+Love that lingers in a kiss.
+You touched my soul, my spirit’s core,
+Unraveled fears I knew before.
+You took my mask, you dried my tears,
+And banished all my lonely years.
+You're the one I'd lose sleep for,
+The voice I crave, the heart I adore.
+You calm my storms, you bring the light,
+And chase away my longest night.
+My heart beats wild, soft and free,
+Because, my love, with you I see..
+A love so pure, so warm, so bright,
+A love that simply feels just right.
+You looked at me, I saw your eyes,
+You painted my heart with a thousand butterflies.
+
+            </h2>
+            <p>
+                <h2>Happy Valentine Day Pochito  </h2>
+            </p>
+        </div>
+    </div>
+</div>
+<button class="back-home" onclick="goHome()">Back to Home</button>
+
+<script>
+    $(document).ready(function () {
+        $(".title").click(function () {
+            $(".container").addClass("open");
+        });
+
+        $(".close").click(function () {
+            $(".container").removeClass("open");
+        });
+    });
+
+    function goHome() {
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
